@@ -15,6 +15,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // add ndk filter that only support arm64-v8a
+        ndk {
+            abiFilters.add("arm64-v8a")
+        }
     }
 
     buildTypes {

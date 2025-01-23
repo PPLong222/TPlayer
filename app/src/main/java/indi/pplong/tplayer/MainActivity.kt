@@ -3,6 +3,7 @@ package indi.pplong.tplayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import indi.pplong.tplayer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
 
         // Example of a call to a native method
         binding.sampleText.text = stringFromJNI()
+
+        Toast.makeText(this, stringFFmpegVersion(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -24,6 +27,8 @@ class MainActivity : AppCompatActivity() {
      * which is packaged with this application.
      */
     external fun stringFromJNI(): String
+
+    external fun stringFFmpegVersion(): String
 
     companion object {
         // Used to load the 'tplayer' library on application startup.
