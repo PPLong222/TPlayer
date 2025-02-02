@@ -1,10 +1,12 @@
 package indi.pplong.tplayer
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import indi.pplong.tplayer.databinding.ActivityMainBinding
+import indi.pplong.tplayer.ffmpeg.FFmpegActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding.sampleText.text = stringFromJNI()
 
         Toast.makeText(this, stringFFmpegVersion(), Toast.LENGTH_SHORT).show();
+
+        binding.btnMain.setOnClickListener {
+            startActivity(Intent(this, FFmpegActivity::class.java))
+        }
     }
 
     /**

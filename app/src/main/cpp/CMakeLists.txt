@@ -47,7 +47,26 @@ set_target_properties(avdevice PROPERTIES IMPORTED_LOCATION ${ffmpeg_lib_dir}/li
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        native-lib.cpp)
+        native-lib.cpp
+        # util
+        ${ffmpeg_head_dir}/util/logger.h
+        ${ffmpeg_head_dir}/util/time.h
+        # player
+        ${ffmpeg_head_dir}/media/player/player.cpp
+        # decoder
+        ${ffmpeg_head_dir}/media/one_frame.h
+        ${ffmpeg_head_dir}/media/decode_state.h
+        ${ffmpeg_head_dir}/media/decoder/i_decoder.h
+        ${ffmpeg_head_dir}/media/decoder/base_decoder.cpp
+        ${ffmpeg_head_dir}/media/decoder/video/v_decoder.cpp
+        # render
+        ${ffmpeg_head_dir}/media/render/video/video_render.h
+        ${ffmpeg_head_dir}/media/render/video/native_render.cpp
+
+        ${ffmpeg_head_dir}/test/test.cpp
+)
+
+
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
