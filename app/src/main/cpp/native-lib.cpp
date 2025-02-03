@@ -47,3 +47,9 @@ JNIEXPORT void JNICALL
 Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_test(JNIEnv *env, jobject thiz) {
     Test *test = new Test();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_resume(JNIEnv *env, jobject thiz, jlong player) {
+    Player *p = (Player *) player;
+    p->resume();
+}

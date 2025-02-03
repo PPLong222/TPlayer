@@ -100,3 +100,7 @@ VideoDecoder::~VideoDecoder() {
 AVMediaType VideoDecoder::GetMediaType() {
     return AVMEDIA_TYPE_VIDEO;
 }
+
+bool VideoDecoder::NeedLoopDecode() {
+    return true;
+}

@@ -47,7 +47,7 @@ void BaseDecoder::Decode() {
     }
 
     InitFFmpegDecoder(env);
-    LogVideoInfo();
+    LogCurrentStreamInfo();
     AllocFrameBuffer();
     av_usleep(1000);
     Prepare(env);
@@ -314,39 +314,33 @@ void BaseDecoder::SyncRender() {
     }
 }
 
-void BaseDecoder::LogVideoInfo() {
-    LOGI(TAG, "--------------Enter Function: LogVideoInfo----------------");
-    LOGI(TAG, "Streams number: %d", m_format_ctx->nb_streams)
-    double duration = m_format_ctx->duration / AV_TIME_BASE;
-    LOGI(TAG, "Media duration: %f s", duration)
-    double start_time = m_format_ctx->start_time / AV_TIME_BASE;
-    LOGI(TAG, "Media start time: %f s", start_time)
-    LOGI(TAG, "Media bit-rate: %ld bit/s  %f B/s  %f KB/s", m_format_ctx->bit_rate, m_format_ctx->bit_rate / 8.0, m_format_ctx->bit_rate / 8.0 / 1024)
-    LOGI(TAG, "Media format: %s", m_format_ctx->iformat->name)
+void BaseDecoder::LogCurrentStreamInfo() {
+    // Target for Codec
+    LOGI(TAG, "--------------Enter Function: LogCurrentStreamInfo----------------");
+    LOGI(TAG, "Streams ID: %d", m_stream_index)
 
-    AVDictionary* dict = m_format_ctx->metadata;
-    AVDictionaryEntry* entry = nullptr;
-    while((entry = av_dict_get(dict, "", entry, AV_DICT_IGNORE_SUFFIX))) {
-        LOGI("Metadata: Key: %s, Value: %s", entry->key, entry->value)
+    AVStream* stream = m_format_ctx->streams[m_stream_index];
+
+    LOGI(TAG, "Format: %s",  m_codec->name)
+    LOGI(TAG, "SampleRate: %d", m_codec_ctx->sample_rate)
+    LOGI(TAG, "SampleFormat: %s", av_get_sample_fmt_name(m_codec_ctx->sample_fmt))
+    LOGI(TAG, "Media bit-rate: %ld bit/s  %.2f B/s  %.2f KB/s", m_codec_ctx->bit_rate, m_codec_ctx->bit_rate / 8.0, m_codec_ctx->bit_rate / 8.0 / 1024)
+    AVRational frame_rate = stream->avg_frame_rate;
+    if (frame_rate.num != 0 && frame_rate.den != 0) {
+        double fps = av_q2d(frame_rate);
+        LOGI(TAG, "FPS is %f", fps)
     }
+//    double duration = m_format_ctx->duration / AV_TIME_BASE;
+//    LOGI(TAG, "Media duration: %f s", duration)
+//    double start_time = m_format_ctx->start_time / AV_TIME_BASE;
+//    LOGI(TAG, "Media start time: %f s", start_time)
+//    LOGI(TAG, "Media bit-rate: %ld bit/s  %f B/s  %f KB/s", m_format_ctx->bit_rate, m_format_ctx->bit_rate / 8.0, m_format_ctx->bit_rate / 8.0 / 1024)
+//    LOGI(TAG, "Media format: %s", m_format_ctx->iformat->name)
 
-    for (int i = 0; i < m_format_ctx->nb_streams; i++) {
-        AVStream* stream = m_format_ctx->streams[i];
-        AVCodecParameters* codecPar = stream->codecpar;
-
-        if (codecPar->codec_type == AVMEDIA_TYPE_VIDEO) {
-            LOGI(TAG, "Stream[%d] is a Video Stream", i)
-            AVRational frame_rate = stream->avg_frame_rate;
-            if (frame_rate.num != 0 && frame_rate.den != 0) {
-                double fps = av_q2d(frame_rate);
-                LOGI(TAG, "Stream[%d] is %f", i, fps)
-            }
-        }
-    }
-
-
-
-
-
-    LOGI(TAG, "--------------Exit Function: LogVideoInfo----------------")
+//    AVDictionary* dict = m_format_ctx->metadata;
+//    AVDictionaryEntry* entry = nullptr;
+//    while((entry = av_dict_get(dict, "", entry, AV_DICT_IGNORE_SUFFIX))) {
+//        LOGI("Metadata: Key: %s, Value: %s", entry->key, entry->value)
+//    }
+    LOGI(TAG, "--------------Exit Function: LogCurrentStreamInfo----------------")
 }

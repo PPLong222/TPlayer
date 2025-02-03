@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TPlayer</string>
     <string name="main">Main</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="player_continue">Continue</string>
 </resources>

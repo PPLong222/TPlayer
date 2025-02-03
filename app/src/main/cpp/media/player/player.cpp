@@ -4,6 +4,7 @@
 
 #include "player.h"
 #include "../render/video/native_render.h"
+#include "../render/audio/open_sl_render.h"
 #include <unistd.h>
 
 Player::Player(JNIEnv *env, jstring path, jobject surface) {
@@ -11,6 +12,11 @@ Player::Player(JNIEnv *env, jstring path, jobject surface) {
     m_v_render = new NativeRender(env, surface);
     m_v_decoder->SetRender(m_v_render);
     m_v_decoder->CreateDecodeThread();
+
+    m_a_decoder = std::make_shared<AudioDecoder>(env, path, false);
+    m_a_render = new OpenSLRender();
+    m_a_decoder->SetRender(m_a_render);
+    m_a_decoder->CreateDecodeThread();
 }
 
 Player::~Player() {
@@ -19,13 +25,21 @@ Player::~Player() {
 
 void Player::play() {
 
-    if (m_v_decoder != nullptr) {
+    if (m_a_decoder != nullptr) {
         m_v_decoder->GoOn();
+        m_a_decoder->GoOn();
+
     }
 }
 
 void Player::pause() {
     if (m_v_decoder != nullptr) {
         m_v_decoder->Pause();
+        m_a_decoder->Pause();
     }
+}
+
+void Player::resume() {
+    m_v_decoder->GoOn();
+    m_a_decoder->GoOn();
 }

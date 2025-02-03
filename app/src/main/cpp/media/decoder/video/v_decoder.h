@@ -21,7 +21,7 @@ private:
 
     AVFrame *m_rgb_frame = nullptr;
 
-    uint8_t  *m_buf_for_rgba_frame = nullptr;
+    uint8_t *m_buf_for_rgba_frame = nullptr;
 
     SwsContext *m_sws_ctx = nullptr;
 
@@ -31,24 +31,29 @@ private:
     int m_dst_h;
 
     void InitRender(JNIEnv *env);
+
     void InitBuffer();
+
     void InitSws();
+
 public:
     VideoDecoder(JNIEnv *env, jstring path, bool for_synthesizer = false);
+
     ~VideoDecoder() override;
+
     void SetRender(VideoRender *render);
 
     AVMediaType GetMediaType() override;
+
 protected:
-
-
-//    bool NeedLoopDecode() override;
 
     void Prepare(JNIEnv *env) override;
 
     void Render(AVFrame *frame) override;
 
     void Release() override;
+
+    bool NeedLoopDecode() override;
 };
 
 

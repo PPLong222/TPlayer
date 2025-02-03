@@ -32,7 +32,9 @@ class FFmpegActivity : AppCompatActivity() {
 
         Log.d(TAG, path)
         initPlayer()
-        binding.button.setOnClickListener { play(player) }
+        binding.buttonPlay.setOnClickListener { play(player) }
+        binding.buttonPause.setOnClickListener { pause(player) }
+        binding.buttonContinue.setOnClickListener { resume(player) }
     }
 
     private fun initPlayer() {
@@ -73,6 +75,8 @@ class FFmpegActivity : AppCompatActivity() {
     private external fun play(player: Long)
 
     private external fun pause(player: Long)
+
+    private external fun resume(player: Long)
 
     private external fun test()
 

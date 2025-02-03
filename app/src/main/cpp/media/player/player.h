@@ -7,18 +7,24 @@
 
 
 #include "../decoder/video/v_decoder.h"
+#include "../decoder/audio/a_decoder.h"
+#include "../render/audio/audio_render.h"
 
 class Player {
 private:
     std::shared_ptr<VideoDecoder> m_v_decoder;
     VideoRender *m_v_render;
 
+    std::shared_ptr<AudioDecoder> m_a_decoder;
+    AudioRender *m_a_render;
 public:
     Player(JNIEnv *env, jstring path, jobject surface);
     ~Player();
 
     void play();
     void pause();
+
+    void resume();
 };
 
 

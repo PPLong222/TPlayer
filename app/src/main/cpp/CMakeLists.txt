@@ -59,10 +59,12 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${ffmpeg_head_dir}/media/decoder/i_decoder.h
         ${ffmpeg_head_dir}/media/decoder/base_decoder.cpp
         ${ffmpeg_head_dir}/media/decoder/video/v_decoder.cpp
+        ${ffmpeg_head_dir}/media/decoder/audio/a_decoder.cpp
         # render
         ${ffmpeg_head_dir}/media/render/video/video_render.h
         ${ffmpeg_head_dir}/media/render/video/native_render.cpp
-
+        ${ffmpeg_head_dir}/media/render/audio/audio_render.h
+        ${ffmpeg_head_dir}/media/render/audio/open_sl_render.cpp
         ${ffmpeg_head_dir}/test/test.cpp
 )
 
@@ -81,7 +83,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         avfilter
         swscale
         avformat
-        avdevice)
+        avdevice
+        # Really need this one?
+        -landroid
+        OpenSLES
+)
 
 
 

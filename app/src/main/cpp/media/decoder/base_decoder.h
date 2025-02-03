@@ -47,7 +47,7 @@ private:
 
     void SyncRender();
 
-    void LogVideoInfo();
+    void LogCurrentStreamInfo();
 
     // Thread
     JavaVM *m_jvm_for_thread = nullptr;
@@ -104,6 +104,8 @@ protected:
 
     virtual void Release() = 0;
 
+    virtual bool NeedLoopDecode() = 0;
+
     void Init(JNIEnv *pEnv, jstring pJstring);
 
     AVFrame *DecodeOneFrame();
@@ -116,6 +118,13 @@ protected:
         return m_format_ctx->streams[m_stream_index]->time_base;
     }
 
+    AVCodecContext *codec_cxt() {
+        return m_codec_ctx;
+    }
+
+    AVStream *cur_stream() {
+        return m_format_ctx->streams[m_stream_index];
+    }
 
 };
 

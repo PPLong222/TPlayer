@@ -16,12 +16,12 @@ enum DecodeState {
 
 inline const char* DecodeStateToString(DecodeState decodeState) {
     switch (decodeState) {
-        STOP: return "STOP";
-        PREPARE: return "PREPARE";
-        START: return "START";
-        DECODING: return "DECODING";
-        PAUSE: return "PAUSE";
-        FINISH: return "FINISH";
+        case STOP: return "STOP";
+        case PREPARE: return "PREPARE";
+        case START: return "START";
+        case DECODING: return "DECODING";
+        case PAUSE: return "PAUSE";
+        case FINISH: return "FINISH";
         default: return "UNKNOWN";
     }
 }
