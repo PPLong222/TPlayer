@@ -1,16 +1,21 @@
 package indi.pplong.tplayer.player
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Surface
 import android.view.SurfaceHolder
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import indi.pplong.tplayer.R
 import indi.pplong.tplayer.databinding.TplayerBinding
 import java.io.File
+import java.util.Locale
 
 /**
  * Description:
@@ -22,11 +27,13 @@ class TPlayer : ConstraintLayout {
     private lateinit var binding: TplayerBinding
     private var player: Long = -1L
     private var path = ""
+    private val handler = Handler(Looper.getMainLooper())
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         init(context)
     }
+
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
@@ -55,6 +62,7 @@ class TPlayer : ConstraintLayout {
     private fun initView() {
         initPlayer()
         setListener()
+        initHandler()
     }
 
     private fun initPlayer() {
@@ -91,6 +99,40 @@ class TPlayer : ConstraintLayout {
         binding.buttonPlay.setOnClickListener { play(player) }
         binding.buttonPause.setOnClickListener { pause(player) }
         binding.buttonContinue.setOnClickListener { seek(player, 2000) }
+        binding.seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                val progress = seekBar?.progress ?: 0
+                if (player != -1L) {
+                    val targetTimeMs = getPlayTime(player) * progress / 100
+                    seek(player, targetTimeMs)
+                }
+            }
+        })
+    }
+
+    private fun initHandler() {
+        val runnable = object : Runnable {
+            override fun run() {
+                if (player != -1L) {
+                    val curPos = getCurPos(player) / 1000.0
+                    binding.tvProgress.text = context.getString(
+                        R.string.current_progress_time,
+                        String.format(Locale.getDefault(), "%.2f", curPos)
+                    )
+                }
+                handler.postDelayed(this, 100L)
+            }
+        }
+        handler.post(runnable)
+
     }
 
 

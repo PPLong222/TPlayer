@@ -49,7 +49,7 @@ long Player::GetDuration() {
 }
 
 long Player::GetCurPos() {
-    return m_v_decoder->GetCurPos();
+    return m_a_decoder->GetCurPos();
 }
 
 void Player::seek(long targetTimeMs) {

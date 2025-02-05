@@ -4,4 +4,5 @@
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="player_continue">Continue</string>
+    <string name="current_progress_time">Current Progress: %s s</string>
 </resources>

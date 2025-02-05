@@ -140,17 +140,18 @@ void BaseDecoder::LoopDecode() {
         }
 
         if (targetPos != -1L) {
-//            long targetTimeUs=  targetPos * AV_TIME_BASE / 1000;
-            long targetTimeUs=  30000000;
-            LOGI(TAG, "Try To Seek To %ld", targetTimeUs)
-            int ret = av_seek_frame(m_format_ctx, m_stream_index, targetTimeUs, AVSEEK_FLAG_BACKWARD);
+            long targetTimeInSec=  targetPos / 1000;
+            AVRational time_base = m_format_ctx->streams[m_stream_index]->time_base;
+            long converterTimeStamp = targetTimeInSec / av_q2d(time_base);
+            LOGI(TAG, "Target Time: %ld s, Converted TimeStamp %ld", targetTimeInSec, converterTimeStamp)
+            int ret = av_seek_frame(m_format_ctx, m_stream_index, converterTimeStamp, AVSEEK_FLAG_BACKWARD);
             if (ret >= 0) {
                 LOGI(TAG, "Seek successfully %d", ret)
                 avcodec_flush_buffers(m_codec_ctx);
             } else {
                 LOGE(TAG, "Seek failed")
             }
-            m_started_t = GetCurMsTime() - 30000;
+            m_started_t = GetCurMsTime() - targetPos;
             targetPos = -1;
         }
 
@@ -342,6 +343,7 @@ void BaseDecoder::LogCurrentStreamInfo() {
     LOGI(TAG, "SampleRate: %d", m_codec_ctx->sample_rate)
     LOGI(TAG, "SampleFormat: %s", av_get_sample_fmt_name(m_codec_ctx->sample_fmt))
     LOGI(TAG, "Media bit-rate: %ld bit/s  %.2f B/s  %.2f KB/s", m_codec_ctx->bit_rate, m_codec_ctx->bit_rate / 8.0, m_codec_ctx->bit_rate / 8.0 / 1024)
+    LOGI(TAG, "Time base is: %d/%d", stream->time_base.num, stream->time_base.den)
     AVRational frame_rate = stream->avg_frame_rate;
     if (frame_rate.num != 0 && frame_rate.den != 0) {
         double fps = av_q2d(frame_rate);
