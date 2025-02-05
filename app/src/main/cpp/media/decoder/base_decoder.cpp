@@ -139,11 +139,27 @@ void BaseDecoder::LoopDecode() {
             LOGI(TAG, "Init Start Time: %ld", m_started_t);
         }
 
+        if (targetPos != -1L) {
+//            long targetTimeUs=  targetPos * AV_TIME_BASE / 1000;
+            long targetTimeUs=  30000000;
+            LOGI(TAG, "Try To Seek To %ld", targetTimeUs)
+            int ret = av_seek_frame(m_format_ctx, m_stream_index, targetTimeUs, AVSEEK_FLAG_BACKWARD);
+            if (ret >= 0) {
+                LOGI(TAG, "Seek successfully %d", ret)
+                avcodec_flush_buffers(m_codec_ctx);
+            } else {
+                LOGE(TAG, "Seek failed")
+            }
+            m_started_t = GetCurMsTime() - 30000;
+            targetPos = -1;
+        }
+
         LOGI(TAG, "Try DecodeOneFrame");
         if (DecodeOneFrame() != nullptr) {
             LOGI(TAG, "Try SyncRender");
             // let render render the frame in right time(key to keep fps)
             SyncRender();
+
             LOGI(TAG, "Try Render");
             Render(m_frame);
 
@@ -307,8 +323,9 @@ void BaseDecoder::SyncRender() {
     int64_t passTime = ct - m_started_t;
     if (m_cur_t_s > passTime) {
         // TODO: maybe it's better using usec for m_cur_t_s
+        LOGI(TAG, "SyncRender: current time: %ld, m_start_time: %ld, m_cur_t_s: %ld, passtime %ld", ct, m_started_t, m_cur_t_s, passTime)
+        LOGI(TAG, "SyncRender: need sleep: %ld us", ((m_cur_t_s - passTime) * 1000))
         av_usleep((unsigned int)((m_cur_t_s - passTime) * 1000));
-        LOGI(TAG, "SyncRender: need sleep: %u us", (unsigned int)((m_cur_t_s - passTime) * 1000))
     } else {
         LOGI(TAG, "SyncRender: no need to sleep, render right now")
     }
@@ -343,4 +360,8 @@ void BaseDecoder::LogCurrentStreamInfo() {
 //        LOGI("Metadata: Key: %s, Value: %s", entry->key, entry->value)
 //    }
     LOGI(TAG, "--------------Exit Function: LogCurrentStreamInfo----------------")
+}
+
+void BaseDecoder::seekTo(long targetTime) {
+
 }

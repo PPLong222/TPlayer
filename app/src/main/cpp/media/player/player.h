@@ -25,6 +25,12 @@ public:
     void pause();
 
     void resume();
+
+    long GetDuration();
+
+    long GetCurPos();
+
+    void seek(long targetTimeMs);
 };
 
 

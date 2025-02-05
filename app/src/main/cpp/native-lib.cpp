@@ -24,7 +24,7 @@ Java_indi_pplong_tplayer_MainActivity_stringFFmpegVersion(JNIEnv *env, jobject t
 }
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_createPlayer(JNIEnv *env, jobject thiz, jstring path,
+Java_indi_pplong_tplayer_player_TPlayer_createPlayer(JNIEnv *env, jobject thiz, jstring path,
                                                             jobject surface) {
     Player *player = new Player(env, path, surface);
     jlong handle = reinterpret_cast<jlong>(player);
@@ -32,24 +32,41 @@ Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_createPlayer(JNIEnv *env, jobject
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_play(JNIEnv *env, jobject thiz, jlong player) {
+Java_indi_pplong_tplayer_player_TPlayer_play(JNIEnv *env, jobject thiz, jlong player) {
     Player *p = (Player *) player;
     p->play();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_pause(JNIEnv *env, jobject thiz, jlong player) {
+Java_indi_pplong_tplayer_player_TPlayer_pause(JNIEnv *env, jobject thiz, jlong player) {
     Player *p = (Player *) player;
     p->pause();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
-Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_test(JNIEnv *env, jobject thiz) {
-    Test *test = new Test();
+Java_indi_pplong_tplayer_player_TPlayer_resume(JNIEnv *env, jobject thiz, jlong player) {
+    Player *p = (Player *) player;
+    p->resume();
+}
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_indi_pplong_tplayer_player_TPlayer_getPlayTime(JNIEnv *env, jobject thiz,
+                                                           jlong player) {
+    Player *p = (Player *) player;
+    return p->GetDuration();
+}
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_indi_pplong_tplayer_player_TPlayer_getCurPos(JNIEnv *env, jobject thiz,
+                                                         jlong player) {
+    Player *p = (Player *) player;
+    return p->GetCurPos();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_indi_pplong_tplayer_ffmpeg_FFmpegActivity_resume(JNIEnv *env, jobject thiz, jlong player) {
+Java_indi_pplong_tplayer_player_TPlayer_seek(JNIEnv *env, jobject thiz, jlong player,
+                                                    jlong progress) {
     Player *p = (Player *) player;
-    p->resume();
+    p->seek(progress);
 }

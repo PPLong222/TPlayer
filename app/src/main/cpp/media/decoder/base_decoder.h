@@ -93,6 +93,8 @@ public:
         return m_duration;
     }
 
+    long targetPos = -1L;
+
 protected:
     void Wait(long second = 0, long ms = 0);
 
@@ -105,6 +107,8 @@ protected:
     virtual void Release() = 0;
 
     virtual bool NeedLoopDecode() = 0;
+
+    void seekTo(long targetTime);
 
     void Init(JNIEnv *pEnv, jstring pJstring);
 

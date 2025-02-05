@@ -43,3 +43,17 @@ void Player::resume() {
     m_v_decoder->GoOn();
     m_a_decoder->GoOn();
 }
+
+long Player::GetDuration() {
+    return m_v_decoder->GetDuration();
+}
+
+long Player::GetCurPos() {
+    return m_v_decoder->GetCurPos();
+}
+
+void Player::seek(long targetTimeMs) {
+    m_v_decoder->targetPos = targetTimeMs;
+    m_a_decoder->targetPos = targetTimeMs;
+    LOGI("Player", "Target: %ld", targetTimeMs);
+}
