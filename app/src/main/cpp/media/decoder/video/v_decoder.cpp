@@ -30,6 +30,7 @@ void VideoDecoder::InitBuffer() {
 }
 
 void VideoDecoder::InitSws() {
+    LOGI(TAG, "Init SWS: current srcFormat: %s", av_get_pix_fmt_name(video_pixel_format()))
     m_sws_ctx = sws_getContext(width(), height(), video_pixel_format(),
                                m_dst_w, m_dst_h, DST_FORMAT, SWS_FAST_BILINEAR, nullptr, nullptr,
                                nullptr);
@@ -83,6 +84,8 @@ void VideoDecoder::Render(AVFrame *frame) {
     // TODO: question, how does it convert?
     sws_scale(m_sws_ctx, frame->data, frame->linesize, 0, height(), m_rgb_frame->data,
               m_rgb_frame->linesize);
+    LOGI("TAG", "frame linesize: %lu, frame height: %d", sizeof(frame->linesize), height())
+
     OneFrame *one_frame = new OneFrame(m_rgb_frame->data[0], m_rgb_frame->linesize[0], frame->pts,
                                        time_base(),
                                        nullptr, false);

@@ -53,6 +53,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${ffmpeg_head_dir}/util/time.h
         # player
         ${ffmpeg_head_dir}/media/player/player.cpp
+        ${ffmpeg_head_dir}/media/player/opengl_player.cpp
         # decoder
         ${ffmpeg_head_dir}/media/one_frame.h
         ${ffmpeg_head_dir}/media/decode_state.h
@@ -63,9 +64,19 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         # render
         ${ffmpeg_head_dir}/media/render/video/video_render.h
         ${ffmpeg_head_dir}/media/render/video/native_render.cpp
+        ${ffmpeg_head_dir}/media/render/video/opengl/opengl_render.cpp
+        ${ffmpeg_head_dir}/media/render/video/opengl/opengl_pixel_receiver.h
         ${ffmpeg_head_dir}/media/render/audio/audio_render.h
         ${ffmpeg_head_dir}/media/render/audio/open_sl_render.cpp
         ${ffmpeg_head_dir}/test/test.cpp
+
+        ${ffmpeg_head_dir}/opengl/egl/egl_core.cpp
+        ${ffmpeg_head_dir}/opengl/egl/egl_surface.cpp
+
+        ${ffmpeg_head_dir}/opengl/drawer/drawer.cpp
+        ${ffmpeg_head_dir}/opengl/drawer/video_drawer.cpp
+        ${ffmpeg_head_dir}/opengl/drawer/proxy/drawer_proxy.cpp
+        ${ffmpeg_head_dir}/opengl/drawer/proxy/drawer_proxy_impl.cpp
 )
 
 
@@ -87,6 +98,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         # Really need this one?
         -landroid
         OpenSLES
+        -lEGL
+        -lGLESv2
 )
 
 
